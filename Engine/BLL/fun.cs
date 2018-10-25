@@ -2,23 +2,33 @@
 using System.Collections.Generic;
 using System.Data;
 using Dapper;
-using static Engine.Model;
+using DataEngine.Models;
 
 namespace Engine
 {
     public class fun
     {
-        public List<Users> GetUsers()
+        public int AddMsg()
         {
-            //分页数据
-            List<Users> users = new List<Users>();
-            using (IDbConnection connection = DapperContext.Connection())
+            using (IDbConnection conn = DapperContext.MsSqlConnection())
             {
+                List<MsgFlow> list = new List<MsgFlow>();
+                for (int i = 0; i < 5; i++)
+                {
+                    MsgFlow msg = new MsgFlow();
+                    msg.Initiator = "闫全飞";
+                    msg.UserJID = "1042";
+                    msg.RecordID = 1;
+                    msg.Classify = 1;
+                    msg.LaunchTime = DateTime.Now.ToString();
+                    msg.State = (int)MsgState.Nil;
 
-                users = connection.Query<Users>("select * from test").AsList<Users>();
+                    list.Add(msg);
+                }
+                string sqlCommandText = @"INSERT INTO MsgFlow(Initiator,UserJID,RecordID,State,Classify,LaunchTime)VALUES(@Initiator,@UserJID,@RecordID,@State,@Classify,@LaunchTime)";
+                int result = conn.Execute(sqlCommandText, list);
+                return result;
             }
-            return users;
-
         }
     }
 }

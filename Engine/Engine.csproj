@@ -13,6 +13,5 @@
   <ItemGroup>
     <Folder Include="BLL\" />
     <Folder Include="DAL\" />
-    <Folder Include="Model\" />
   </ItemGroup>
 </Project>

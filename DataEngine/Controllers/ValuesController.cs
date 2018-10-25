@@ -17,7 +17,7 @@ namespace DataEngine.Controllers
         {
 
             fun f = new fun();
-            string json= Newtonsoft.Json.JsonConvert.SerializeObject(f.GetUsers()) ;
+            string json= Newtonsoft.Json.JsonConvert.SerializeObject(f.AddMsg()) ;
 
             return new string[] { json };
         }
