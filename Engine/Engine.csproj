@@ -14,4 +14,7 @@
     <Folder Include="BLL\" />
     <Folder Include="DAL\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Model\Model.cs" />
+  </ItemGroup>
 </Project>
