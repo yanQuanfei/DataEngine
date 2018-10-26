@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataEngine.Models;
 using Engine;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +17,26 @@ namespace DataEngine.Controllers
         public ActionResult<IEnumerable<string>> Get()
         {
 
-            fun f = new fun();
-            string json= Newtonsoft.Json.JsonConvert.SerializeObject(f.AddMsg()) ;
+
+            AuditRoute auditRoute = new AuditRoute();
+            auditRoute.AuditMethod = 1;
+            auditRoute.MsgID = 23;
+            auditRoute.RulesID = 1;
+            auditRoute.Auditor = "[{1:123@com}]";
+            auditRoute.Copies = "[{1:123@com}]";
+            BasicsEngine basicsEngine = new BasicsEngine();
+
+
+            MsgFlow msg = new MsgFlow();
+            msg.Initiator = "闫全飞";
+            msg.UserJID = "1042";
+            msg.RecordID = 1;
+            msg.Classify = 1;
+            msg.LaunchTime = DateTime.Now.ToString();
+            msg.State = (int)MsgState.Nil;
+
+
+            string json= Newtonsoft.Json.JsonConvert.SerializeObject(basicsEngine.AddMsgFlow("闫全飞", "1024",1,1)) ;
 
             return new string[] { json };
         }

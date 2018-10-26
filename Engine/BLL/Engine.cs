@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace DataEngine.Engine
+namespace Engine
 {
-    internal class Engine
+    public class BasicsEngine
     {
         //        public static string[] ClassifyArrey { get; set; }
         //
@@ -59,13 +59,13 @@ namespace DataEngine.Engine
         /// <param name="UserJID">UserJID</param>
         /// <param name="Classify">类别编号</param>
         /// <param name="RecordID">记录ID</param>
-        /// <returns>成功与否</returns>
-        public bool AddMsgFlow(string Initiator, string UserJID, int Classify, int RecordID)
+        /// <returns>添加的ID</returns>
+        public int AddMsgFlow(string Initiator, string UserJID, int Classify, int RecordID)
         {
             if (string.IsNullOrEmpty(Initiator) && string.IsNullOrEmpty(Initiator))
             {
                 Log.ToFile("添加消息流报错：参数为空");
-                return false;
+                return 0;
             }
 
             try
@@ -82,22 +82,24 @@ namespace DataEngine.Engine
 
                     string sqlCommandText =
                         @"INSERT INTO MsgFlow(Initiator,UserJID,RecordID,State,Classify,LaunchTime)VALUES(@Initiator,@UserJID,@RecordID,@State,@Classify,@LaunchTime)";
-                    int result = conn.Execute(sqlCommandText, msg);
+                        
+                    sqlCommandText += "SELECT CAST(SCOPE_IDENTITY() as int)";
+                    int result = conn.Query<int>(sqlCommandText, msg).FirstOrDefault();
 
                     if (result > 0)
                     {
-                        return true;
+                        return result;
                     }
                     else
                     {
-                        return false;
+                        return 0;
                     }
                 }
             }
             catch (Exception ex)
             {
                 Log.ToFile("添加信息流报错：" + ex.Message);
-                return false;
+                return 0;
             }
         }
 
@@ -266,7 +268,7 @@ namespace DataEngine.Engine
         /// </summary>
         /// <param name="ClassifyID"></param>
         /// <returns></returns>
-        private List<WorkRules> GetWorkRules(int ClassifyID)
+        public  List<WorkRules> GetWorkRules( int ClassifyID)
         {
             try
             {
@@ -275,7 +277,7 @@ namespace DataEngine.Engine
                     List<WorkRules> workRulesList = new List<WorkRules>();
 
                     string sqlCommandText =
-                        @"SELECT  [ID],[ClassifyID] ,[ClassifyName] ,[AuditorRules] ,[CopyRules] ,[Premise] ,[Priority]  ,[AuditMethod] FROM [SysOffice].[tbobjects].[WorkRules] WHERE ClassifyID=@ClassifyID";
+                        @"SELECT  [ID],[ClassifyID] ,[ClassifyName] ,[AuditorRules] ,[CopyRules] ,[Premise] ,[Priority]  ,[AuditMethod] FROM [WorkRules] WHERE ClassifyID=@ClassifyID";
                     workRulesList = conn.Query<WorkRules>(sqlCommandText, new { ClassifyID = ClassifyID }).ToList();
                     return workRulesList;
                 }
@@ -287,6 +289,39 @@ namespace DataEngine.Engine
             }
         }
 
+        /// <summary>
+        /// 添加到路线图
+        /// </summary>
+        /// <returns><c>true</c>, if audit route was added, <c>false</c> otherwise.</returns>
+        /// <param name="auditRoute">Audit route.</param>
+        public bool AddAuditRoute(AuditRoute auditRoute){
+
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+
+                    string sqlCommandText =
+                        @"INSERT INTO AuditRoute(MsgID,RulesID,AuditMethod,Auditor,Copies)VALUES(@MsgID,@RulesID,@AuditMethod,@Auditor,@Copies)";
+                    int result = conn.Execute(sqlCommandText, auditRoute);
+
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("添加路线图报错：" + ex.Message);
+                return false;
+            }
+
+        }
 
 
 

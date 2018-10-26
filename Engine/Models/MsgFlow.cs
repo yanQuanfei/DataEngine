@@ -8,7 +8,7 @@ namespace DataEngine.Models
     /// <summary>
     /// 信息流
     /// </summary>
-    class MsgFlow
+    public class MsgFlow
     {
         public int ID { get; set; }
         /// <summary>
@@ -56,7 +56,7 @@ namespace DataEngine.Models
     /// <summary>
     /// 消息状态
     /// </summary>
-    enum MsgState
+    public enum MsgState
     {
         /// <summary>
         /// 未审核

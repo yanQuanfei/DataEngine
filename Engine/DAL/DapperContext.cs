@@ -18,8 +18,8 @@ namespace Engine
         }
         public static SqlConnection MsSqlConnection()
         {
-//            string sqlconnectionString = "server=127.0.0.1;database=sysoffice;User=sa;password=<YourStrong!Passw0rd>;Connect Timeout=1000000";
-            string sqlconnectionString = "server=192.168.2.85;database=SysOffice;User=tbobjects;password=tbobjects2013;Connect Timeout=1000000";
+           string sqlconnectionString = "server=127.0.0.1;database=sysoffice;User=sa;password=<YourStrong!Passw0rd>;Connect Timeout=1000000";
+            //  string sqlconnectionString = "server=192.168.2.85;database=SysOffice;User=tbobjects;password=tbobjects2013;Connect Timeout=1000000";
             var connection = new SqlConnection(sqlconnectionString);
             connection.Open();
             return connection;

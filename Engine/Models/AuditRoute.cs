@@ -9,7 +9,7 @@ namespace DataEngine.Models
     /// <summary>
     /// 路线表
     /// </summary>
-    class AuditRoute
+    public class AuditRoute
     {
         public int ID { get; set; }
         /// <summary>

@@ -8,7 +8,7 @@ namespace DataEngine.Models
     /// <summary>
     /// 工作规则
     /// </summary>
-    class WorkRules
+    public class WorkRules
     {
         public int ID { get; set; }
         /// <summary>

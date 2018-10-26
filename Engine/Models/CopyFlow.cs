@@ -8,7 +8,7 @@ namespace DataEngine.Models
     /// <summary>
     /// 抄送流
     /// </summary>
-    class CopyFlow
+    public class CopyFlow
     {
         public int ID { get; set; }
         /// <summary>

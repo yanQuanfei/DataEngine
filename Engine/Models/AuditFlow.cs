@@ -8,7 +8,7 @@ namespace DataEngine.Models
     /// <summary>
     /// 审核流
     /// </summary>
-    class AuditFlow
+    public class AuditFlow
     {
 
         public int ID { get; set; }
