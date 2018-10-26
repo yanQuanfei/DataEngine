@@ -11,6 +11,7 @@ namespace DataEngine.Models
     /// </summary>
     class AuditRoute
     {
+        public int ID { get; set; }
         /// <summary>
         /// 信息ID
         /// </summary>

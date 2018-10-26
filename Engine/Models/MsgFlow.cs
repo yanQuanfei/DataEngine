@@ -10,6 +10,7 @@ namespace DataEngine.Models
     /// </summary>
     class MsgFlow
     {
+        public int ID { get; set; }
         /// <summary>
         /// 发起人
         /// </summary>

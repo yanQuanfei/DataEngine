@@ -10,6 +10,8 @@ namespace DataEngine.Models
     /// </summary>
     class AuditFlow
     {
+
+        public int ID { get; set; }
         /// <summary>
         /// 审核人账号
         /// </summary>
@@ -34,4 +36,24 @@ namespace DataEngine.Models
         public string AuditOpinion { get; set; }
 
     }
+    /// <summary>
+    /// 审批状态
+    /// </summary>
+    enum AuditState
+    {
+        /// <summary>
+        /// 未审核
+        /// </summary>
+        Nil = 0,
+        /// <summary>
+        /// 批准
+        /// </summary>
+        Yes = 1,
+        /// <summary>
+        /// 拒绝
+        /// </summary>
+        NO = 2
+
+    }
+
 }

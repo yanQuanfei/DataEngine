@@ -10,6 +10,7 @@ namespace DataEngine.Models
     /// </summary>
     class CopyFlow
     {
+        public int ID { get; set; }
         /// <summary>
         /// 抄送人账号
         /// </summary>

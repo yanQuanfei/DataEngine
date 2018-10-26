@@ -10,6 +10,7 @@ namespace DataEngine.Models
     /// </summary>
     class WorkRules
     {
+        public int ID { get; set; }
         /// <summary>
         /// 申请类别
         /// </summary>
