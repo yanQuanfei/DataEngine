@@ -273,7 +273,7 @@ namespace Engine
                     List<WorkRules> workRulesList = new List<WorkRules>();
 
                     string sqlCommandText =
-                        @"SELECT  [ID],[ClassifyID] ,[ClassifyName] ,[AuditorRules] ,[CopyRules] ,[Premise] ,[Priority]  ,[AuditMethod] FROM [WorkRules] WHERE ClassifyID=@ClassifyID";
+                        @"SELECT  [ID],[ClassifyID] ,[ClassifyName] ,[AuditorRules] ,[CopyRules] ,[Premise] ,[Priority]  ,[AuditMethod] FROM [WorkRules] WHERE ClassifyID=@ClassifyID order by Priority desc";
                     workRulesList = conn.Query<WorkRules>(sqlCommandText, new { ClassifyID = ClassifyID }).ToList();
                     return workRulesList;
                 }
