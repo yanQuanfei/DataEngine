@@ -24,9 +24,7 @@ namespace DataEngine.Controllers
             auditRoute.RulesID = 1;
             auditRoute.Auditor = "[{1:123@com}]";
             auditRoute.Copies = "[{1:123@com}]";
-            BasicsEngine basicsEngine = new BasicsEngine();
-
-
+          
             MsgFlow msg = new MsgFlow();
             msg.Initiator = "闫全飞";
             msg.UserJID = "1042";
@@ -35,8 +33,16 @@ namespace DataEngine.Controllers
             msg.LaunchTime = DateTime.Now.ToString();
             msg.State = (int)MsgState.Nil;
 
+            msg.ID = BasicsEngine.AddMsgFlow("闫全飞", "1024", 1, 1);
 
-            string json= Newtonsoft.Json.JsonConvert.SerializeObject(basicsEngine.AddMsgFlow("闫全飞", "1024",1,1)) ;
+          string json= Newtonsoft.Json.JsonConvert.SerializeObject(msg) ;
+
+
+            Program.FilterQueue.Enqueue(msg);
+           
+//            Program.ProcessQueue.Enqueue("ProcessMsgQueue111111111111");
+//            Program.ProcessQueue.Enqueue("ProcessMsgQueue222222222222");
+//            Program.ProcessQueue.Enqueue("ProcessMsgQueue333333333333");
 
             return new string[] { json };
         }
