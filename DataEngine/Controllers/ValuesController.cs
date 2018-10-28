@@ -52,17 +52,17 @@ namespace DataEngine.Controllers
         public ActionResult<string> Get(int id)
         {
            
-                AuditFlow auditFlow = new AuditFlow();
-                auditFlow.AuditState = (int)AuditState.Yes;
-                auditFlow.AuditOpinion = "同意";
-                auditFlow.ID = 5;
-                auditFlow.MsgID = 54;
-                auditFlow.AuditorJID = "2222@com";
+                //AuditFlow auditFlow = new AuditFlow();
+                //auditFlow.AuditState = (int)AuditState.Yes;
+                //auditFlow.AuditOpinion = "同意";
+                //auditFlow.ID = 5;
+                //auditFlow.MsgID = 54;
+                //auditFlow.AuditorJID = "2222@com";
 
-                bool b = BasicsEngine.UpdAuditFlow(auditFlow);
-                Program.ProcessQueue.Enqueue(auditFlow);
+                //bool b = BasicsEngine.UpdAuditFlow(auditFlow);
+                //Program.ProcessQueue.Enqueue(auditFlow);
 
-                return b.ToString();
+                return "";
            
 
         }
@@ -95,14 +95,20 @@ namespace DataEngine.Controllers
         {
 
             AuditFlow auditFlow = new AuditFlow();
-            auditFlow.AuditState = audit["AuditState"];
-            auditFlow.AuditOpinion = audit["AuditOpinion"];
-            auditFlow.ID = audit["ID"];
-            auditFlow.MsgID = audit["MsgID"];
-            auditFlow.AuditorJID = audit["AuditorJID"];
+            //auditFlow.AuditState = audit["AuditState"];
+            //auditFlow.AuditOpinion = audit["AuditOpinion"];
+            //auditFlow.ID = audit["ID"];
+            //auditFlow.MsgID = audit["MsgID"];
+            //auditFlow.AuditorJID = audit["AuditorJID"];
+
+            //audit["ID"], audit["AuditState"], audit["AuditOpinion"]
+            int id = audit["ID"];
+            AuditState state = audit["AuditState"];
+            string Opinion = audit["AuditOpinion"];
 
 
-            bool b = BasicsEngine.UpdAuditFlow(auditFlow);
+
+            auditFlow = BasicsEngine.UpdAuditFlow(id,state,Opinion);
             Program.ProcessQueue.Enqueue(auditFlow);
 
         }

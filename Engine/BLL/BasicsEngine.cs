@@ -219,7 +219,7 @@ namespace Engine
         /// </summary>
         /// <param name="audits"></param>
         /// <returns></returns>
-        public static bool UpdAuditFlow(AuditFlow audits)
+        public static AuditFlow UpdAuditFlow(int ID, AuditState state,string Opinion)
         {
 
             try
@@ -229,22 +229,26 @@ namespace Engine
                     
                     string sqlCommandText =                  
                     @"UPDATE AuditFlow SET AuditState=@AuditState,AuditOpinion=@AuditOpinion WHERE ID=@ID";
-                    int result = conn.Execute(sqlCommandText, audits);
-
+                    int result = conn.Execute(sqlCommandText, new { ID = ID, AuditState = (int)state, AuditOpinion = Opinion });
                     if (result > 0)
                     {
-                        return true;
+
+                        sqlCommandText = @"SELECT  [ID],[MsgID] ,[AuditorJID] ,[AuditState]   FROM [AuditFlow] WHERE ID=@ID";
+
+                        AuditFlow auditFlow = conn.Query<AuditFlow>(sqlCommandText, new { ID = ID }).FirstOrDefault();
+
+                        return auditFlow;
                     }
                     else
                     {
-                        return false;
+                        return null;
                     }
                 }
             }
             catch (Exception ex)
             {
                 Log.ToFile("审批信息报错：" + ex.Message);
-                return false;
+                return null;
             }
         }
         /// <summary>
