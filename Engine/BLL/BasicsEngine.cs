@@ -66,6 +66,74 @@ namespace Engine
                 return 0;
             }
         }
+        /// <summary>
+        /// 处理修改信息流
+        /// 需要状态和 ID
+        /// </summary>
+        /// <returns><c>true</c>, if message flow was upded, <c>false</c> otherwise.</returns>
+        /// <param name="msgFlow">Message flow.</param>
+        public static bool ProcessMsgFlow(MsgFlow msgFlow)
+        {
+
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+
+                    string sqlCommandText =
+                    @"UPDATE MsgFlow SET State=@State,AuditTime=@AuditTime WHERE ID=@ID";
+                    int result = conn.Execute(sqlCommandText, msgFlow);
+
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("审批信息报错：" + ex.Message);
+                return false;
+            }
+        }
+        /// <summary>
+        /// 过滤修改信息流
+        /// 需要规则 ID 和路线图 ID 和消息 ID
+        /// </summary>
+        /// <returns><c>true</c>, if message flow was filtered, <c>false</c> otherwise.</returns>
+        /// <param name="msgFlow">Message flow.</param>
+        public static bool FilterMsgFlow(MsgFlow msgFlow)
+        {
+
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+
+                    string sqlCommandText =
+                    @"UPDATE MsgFlow SET RulesID=@RulesID,RouteID=@RouteID WHERE ID=@ID";
+                    int result = conn.Execute(sqlCommandText, msgFlow);
+
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("审批信息报错：" + ex.Message);
+                return false;
+            }
+        }
 
         /// <summary>
         /// 添加审批流
@@ -318,9 +386,55 @@ namespace Engine
             }
 
         }
+        /// <summary>
+        /// 获取指定消息的路线图
+        /// </summary>
+        /// <returns>The auditroute.</returns>
+        /// <param name="msgId">消息 ID</param>
+        public static AuditRoute GetAuditRoute(int msgId)
+        {
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                    AuditRoute auditRoute = new AuditRoute();
 
-
-
+                    string sqlCommandText =
+                        @"SELECT  [ID],[MsgID] ,[RulesID] ,[AuditMethod] ,[Auditor] ,[Copies]  FROM [Route] WHERE MsgID=@MsgID";
+                    auditRoute = conn.Query<AuditRoute>(sqlCommandText, new { MsgID = msgId }).FirstOrDefault();
+                    return auditRoute;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("获取路线图报错ex：" + ex.Message);
+                return null;
+            }
+        }
+        /// <summary>
+        /// 根据消息 ID 获取审批流
+        /// </summary>
+        /// <returns>The audit flows.</returns>
+        /// <param name="msgId">Message identifier.</param>
+        public static List<AuditFlow> GetAuditFlows (int msgId)
+        {
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                    List<AuditFlow> AuditFlowsList = new List<AuditFlow>();
+                    string sqlCommandText =
+                        @"SELECT  [ID],[MsgID] ,[AuditorJID] ,[AuditState]   FROM [AuditFlow] WHERE MsgID=@MsgID";
+                    AuditFlowsList = conn.Query<AuditFlow>(sqlCommandText, new { MsgID = msgId }).ToList();
+                    return AuditFlowsList;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("获取审批状态报错ex：" + ex.Message);
+                return null;
+            }
+        }
 
 
     }

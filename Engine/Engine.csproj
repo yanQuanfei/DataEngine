@@ -15,5 +15,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Model\Model.cs" />
+    <Compile Remove="Models\AppSettings\AppSettings.cs" />
+    <Compile Remove="Models\AppSettings\DBSettings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Options">
+      <HintPath>..\..\..\..\..\usr\local\share\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.options\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

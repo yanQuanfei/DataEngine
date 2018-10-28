@@ -58,7 +58,13 @@ namespace DataEngine.Queue
                       bool b=  AdvancedEngine.FilterMsgToAuditRoute(msg);
                         if (b)
                         {
-                            Program.ProcessQueue.Enqueue(msg.ID);
+
+                            AuditFlow auditFlow = new AuditFlow();
+                            auditFlow.MsgID = msg.ID;
+                            //主要是来源不一样
+                            //过滤来的，只有 ID
+                            //API来的有整个审批流
+                            Program.ProcessQueue.Enqueue(auditFlow);
                             Log.ToFile("过滤队列消息：" + msgJson);
                         }
                         else
@@ -67,10 +73,6 @@ namespace DataEngine.Queue
                             Log.ToFile("过滤队列循环,创建路线图失败,未加入处理队列");
                         }
 
-
-
-                      
-                      
                     }
                 }
                 catch (Exception ex)
@@ -94,9 +96,13 @@ namespace DataEngine.Queue
                     if (Program.ProcessQueue != null && Program.ProcessQueue.Count > 0)
                     {
                        
-                        string msgJson = Program.ProcessQueue.Dequeue().ToString();
+                        AuditFlow auditFlow = Program.ProcessQueue.Dequeue();
+
+                        AdvancedEngine.ProcessMsgToAuditAndCopy(auditFlow);
+                       
+                        string msgJson = Newtonsoft.Json.JsonConvert.SerializeObject(auditFlow);
                         Log.ToFile("处理队列：" + msgJson);
-                     
+                    
                      
                     }
                 }

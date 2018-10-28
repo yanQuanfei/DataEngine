@@ -39,7 +39,7 @@ namespace DataEngine.Models
     /// <summary>
     /// 审批状态
     /// </summary>
-    enum AuditState
+    public  enum AuditState
     {
         /// <summary>
         /// 未审核

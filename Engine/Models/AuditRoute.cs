@@ -45,4 +45,22 @@ namespace DataEngine.Models
 
 
     }
+
+    enum AuditMethod
+    {
+        /// <summary>
+        /// 依次审核
+        /// </summary>
+        yici = 1,
+        /// <summary>
+        /// 会签
+        /// </summary>
+        hui = 2,
+        /// <summary>
+        /// 或签
+        /// </summary>
+        huo = 3
+
+    }
+
 }

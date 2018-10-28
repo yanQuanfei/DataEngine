@@ -5,41 +5,37 @@ using System.Threading.Tasks;
 using DataEngine.Models;
 using Engine;
 using Engine.Tool;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace DataEngine.Controllers
 {
-    [Route("api/[controller]")]
+
+    [Route("api/[controller]/[action]")]
     [ApiController]
+     
+
     public class ValuesController : ControllerBase
     {
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-
-            //
-            //            AuditRoute auditRoute = new AuditRoute();
-            //            auditRoute.AuditMethod = 1;
-            //            auditRoute.MsgID = 23;
-            //            auditRoute.RulesID = 1;
-            //            auditRoute.Auditor = "[{1:123@com}]";
-            //            auditRoute.Copies = "[{1:123@com}]";
-            //          
-            //            MsgFlow msg = new MsgFlow();
-            //            msg.Initiator = "闫全飞";
-            //            msg.UserJID = "1042";
-            //            msg.RecordID = 1;
-            //            msg.Classify = 1;
-            //            msg.LaunchTime = DateTime.Now.ToString();
-            //            msg.State = (int)MsgState.Nil;
-            //
-            //            msg.ID = BasicsEngine.AddMsgFlow("闫全飞", "1024", 1, 1);
-            //
-            //          string json= Newtonsoft.Json.JsonConvert.SerializeObject(msg) ;
-            //
-            //
-            //            Program.FilterQueue.Enqueue(msg);
+                        MsgFlow msg = new MsgFlow();
+                        msg.Initiator = "闫全飞";
+                        msg.UserJID = "1042";
+                        msg.RecordID = 1;
+                        msg.Classify = 1;
+                        msg.LaunchTime = DateTime.Now.ToString();
+                        msg.State = (int)MsgState.Nil;
+            
+                      //  msg.ID = BasicsEngine.AddMsgFlow("闫全飞", "1024", 1, 1);
+            
+                      //string json= Newtonsoft.Json.JsonConvert.SerializeObject(msg) ;
+            
+            
+                        //Program.FilterQueue.Enqueue(msg);
             //           
             ////            Program.ProcessQueue.Enqueue("ProcessMsgQueue111111111111");
             ////            Program.ProcessQueue.Enqueue("ProcessMsgQueue222222222222");
@@ -48,26 +44,67 @@ namespace DataEngine.Controllers
 
             string str = ClassifyConfig.GetClassifyStr(0);
            
-            return new string[] { str };
+            return new string[] {  str };
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+           
+                AuditFlow auditFlow = new AuditFlow();
+                auditFlow.AuditState = (int)AuditState.Yes;
+                auditFlow.AuditOpinion = "同意";
+                auditFlow.ID = 5;
+                auditFlow.MsgID = 54;
+                auditFlow.AuditorJID = "2222@com";
+
+                bool b = BasicsEngine.UpdAuditFlow(auditFlow);
+                Program.ProcessQueue.Enqueue(auditFlow);
+
+                return b.ToString();
+           
+
         }
 
         // POST api/values
+        [AllowAnonymous]
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post(dynamic m)
         {
+
+            MsgFlow msg = new MsgFlow();
+            msg.Initiator =m["Initiator"];
+            msg.UserJID = m["UserJID"];
+            msg.RecordID = m["RecordID"];
+            msg.Classify = m["RecordID"];
+            msg.LaunchTime = DateTime.Now.ToString();
+            msg.State = (int)MsgState.Nil;
+
+            msg.ID = BasicsEngine.AddMsgFlow(msg.Initiator, msg.UserJID,msg.Classify ,msg.RecordID);
+
+            string json= Newtonsoft.Json.JsonConvert.SerializeObject(msg) ;
+
+
+            Program.FilterQueue.Enqueue(msg);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [AllowAnonymous]
+        [HttpPut]
+        public void Put(dynamic audit)
         {
+
+            AuditFlow auditFlow = new AuditFlow();
+            auditFlow.AuditState = audit["AuditState"];
+            auditFlow.AuditOpinion = audit["AuditOpinion"];
+            auditFlow.ID = audit["ID"];
+            auditFlow.MsgID = audit["MsgID"];
+            auditFlow.AuditorJID = audit["AuditorJID"];
+
+
+            bool b = BasicsEngine.UpdAuditFlow(auditFlow);
+            Program.ProcessQueue.Enqueue(auditFlow);
+
         }
 
         // DELETE api/values/5

@@ -10,12 +10,12 @@ namespace DataEngine
     public class Program
     {
         private static Queue<MsgFlow> FilterMsgQueue;
-        private static Queue<int> ProcessMsgQueue;
+        private static Queue<AuditFlow> ProcessMsgQueue;
 
         public static void Main(string[] args)
         {
             FilterMsgQueue = new Queue<MsgFlow>();
-            ProcessMsgQueue = new Queue<int>();
+            ProcessMsgQueue = new Queue<AuditFlow>();
 
             PollingQueue queue = new PollingQueue();
             JobManager.Initialize(queue.Start());
@@ -35,7 +35,7 @@ namespace DataEngine
         /// <summary>
         /// 处理队列
         /// </summary>
-        public static Queue<int> ProcessQueue
+        public static Queue<AuditFlow> ProcessQueue
         {
             get { return ProcessMsgQueue; }
             set { ProcessMsgQueue = value; }
