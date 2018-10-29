@@ -52,7 +52,11 @@ namespace DataEngine.Models
         /// <summary>
         /// 拒绝
         /// </summary>
-        NO = 2
+        NO = 2,
+        /// <summary>
+        /// 失效
+        /// </summary>
+        Invalid=3
 
     }
 

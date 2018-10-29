@@ -35,7 +35,9 @@ namespace DataEngine
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                c.EnableAnnotations();
             });
+
 
             //services.AddOptions();
             //services.Configure<SqlContext>(Configuration.GetSection("SqlContext"));//数据库连接信息

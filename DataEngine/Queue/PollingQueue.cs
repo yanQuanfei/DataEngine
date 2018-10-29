@@ -64,7 +64,7 @@ namespace DataEngine.Queue
                             //主要是来源不一样
                             //过滤来的，只有 ID
                             //API来的有整个审批流
-                            Program.ProcessQueue.Enqueue(auditFlow);
+                           // Program.ProcessQueue.Enqueue(auditFlow);
                             Log.ToFile("过滤队列消息：" + msgJson);
                         }
                         else

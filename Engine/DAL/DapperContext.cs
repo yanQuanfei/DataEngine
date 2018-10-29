@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
-using Microsoft.Extensions.Options;
+//using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 
 namespace Engine
@@ -19,11 +19,11 @@ namespace Engine
     {
 
         public static SqlContext Sql;
-        public DapperContext(IOptions<SqlContext> context)
-        {
-            Sql = context.Value;
-           
-        }
+//        public DapperContext(IOptions<SqlContext> context)
+//        {
+//            Sql = context.Value;
+//           
+//        }
 
         public static MySqlConnection MySqlConnection()
         {
@@ -36,8 +36,8 @@ namespace Engine
         }
         public static SqlConnection MsSqlConnection()
         {
-          string mssqlconnectionString = "server=127.0.0.1;database=sysoffice;User=sa;password=<YourStrong!Passw0rd>;Connect Timeout=1000000";
-            //  string sqlconnectionString = "server=192.168.2.85;database=SysOffice;User=tbobjects;password=tbobjects2013;Connect Timeout=1000000";
+           // string mssqlconnectionString = "server=127.0.0.1;database=sysoffice;User=sa;password=<YourStrong!Passw0rd>;Connect Timeout=1000000";
+            string mssqlconnectionString = "server=192.168.2.85;database=SysOffice;User=tbobjects;password=tbobjects2013;Connect Timeout=1000000";
            
 
             var connection = new SqlConnection(mssqlconnectionString);
