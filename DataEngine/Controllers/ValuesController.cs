@@ -25,12 +25,18 @@ namespace DataEngine.Controllers
                         MsgFlow msg = new MsgFlow();
                         msg.Initiator = "闫全飞";
                         msg.UserJID = "1042";
-                        msg.RecordID = 1;
-                        msg.Classify = 1;
+                        msg.RecordID = 51;
+                        msg.Classify = 0;
                         msg.LaunchTime = DateTime.Now.ToString();
                         msg.State = (int)MsgState.Nil;
 
-            //  msg.ID = BasicsEngine.AddMsgFlow("闫全飞", "1024", 1, 1);
+             // msg.ID = BasicsEngine.AddMsgFlow("闫全飞", "1024", 1, 1);
+
+//            string[] arr= new string []{ "auto_group21_netrole@im.sino-med.net", "auto_group22_netrole@im.sino-med.net" };
+//            string aq = "auto_group22_netrole@im.sino-med.net";
+//            string a = BasicsEngine.GetUserForRole(arr);
+
+           // AdvancedEngine.FilterMsgToAuditRoute(msg);
 
             //string json= Newtonsoft.Json.JsonConvert.SerializeObject(msg) ;
 
@@ -41,12 +47,17 @@ namespace DataEngine.Controllers
             ////            Program.ProcessQueue.Enqueue("ProcessMsgQueue222222222222");
             ////            Program.ProcessQueue.Enqueue("ProcessMsgQueue333333333333");
 
-          object job=  BasicsEngine.GetJobject(51,0);
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(job);
+//            object job=  BasicsEngine.GetJobject(51,0);
+//            string json = Newtonsoft.Json.JsonConvert.SerializeObject(job);
+//
+//            string str = ClassifyConfig.GetClassifyStr(0);
 
-            string str = ClassifyConfig.GetClassifyStr(0);
+
+
+           ;
            
-            return new string[] {  str ,json};
+            return new string[] {  AdvancedEngine.GetAuditoArr(
+                "{\r\n\"type\":\"3\",\r\n\"level\":\"3\",\r\n\"name\":[\"auto_group21_netrole@im.sino-med.net\", \"auto_group22_netrole@im.sino-med.net\"]\r\n}")};
         }
 
         // GET api/values/5

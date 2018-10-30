@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DataEngine.Models;
 using Engine.Tool;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -478,6 +479,39 @@ namespace Engine
             catch (Exception ex)
             {
                 Log.ToFile("获取详细数据报错ex：" + ex.Message);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 根据角色获取人
+        /// </summary>
+        /// <param name="roles"></param>
+        /// <returns></returns>
+        public static string GetUserForRole(JArray roles)
+        {
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                    List<string> users = new List<string>();
+
+                    string sqlCommandText =
+                        @"SELECT  UserCode  FROM User_Role_Mapping  WHERE RoleCode = @RoleCode";
+                    foreach (string role in roles)
+                    {
+                        List<string> users1 = new List<string>();
+                        users1 = conn.Query<string>(sqlCommandText, new { RoleCode = role }).ToList();
+
+                        users = users.Union(users1).ToList<string>();
+                    }
+
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(users);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("根据角色获取员工报错ex：" + ex.Message);
                 return null;
             }
         }
