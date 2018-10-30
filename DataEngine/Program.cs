@@ -4,6 +4,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
 using DataEngine.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace DataEngine
 {
@@ -20,7 +21,10 @@ namespace DataEngine
             PollingQueue queue = new PollingQueue();
             JobManager.Initialize(queue.Start());
 
-            CreateWebHostBuilder(args).Build().Run();
+            //  CreateWebHostBuilder(args).Build().Run();
+
+            BuildWebHost(args).Run();
+
         }
 
         /// <summary>
@@ -40,6 +44,19 @@ namespace DataEngine
             get { return ProcessMsgQueue; }
             set { ProcessMsgQueue = value; }
         }
+
+
+        public static IWebHost BuildWebHost(string[] args)
+        {
+            var config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .Build();
+            return WebHost.CreateDefaultBuilder(args).UseConfiguration(config)
+                .UseStartup<Startup>()
+                .Build();
+        }
+
+  
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)

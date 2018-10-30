@@ -90,7 +90,7 @@ namespace DataEngine.Controllers
             msg.Initiator =m["Initiator"];
             msg.UserJID = m["UserJID"];
             msg.RecordID = m["RecordID"];
-            msg.Classify = m["RecordID"];
+            msg.Classify = m["Classify"];
             msg.LaunchTime = DateTime.Now.ToString();
             msg.State = (int)MsgState.Nil;
 

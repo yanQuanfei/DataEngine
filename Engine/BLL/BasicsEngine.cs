@@ -77,6 +77,7 @@ namespace Engine
             {
                 using (IDbConnection conn = DapperContext.MsSqlConnection())
                 {
+                    msgFlow.AuditTime = DateTime.Now.ToString("yyyy-MM-dd");
                     string sqlCommandText =
                     @"UPDATE MsgFlow SET State=@State,AuditTime=@AuditTime WHERE ID=@ID";
                     int result = conn.Execute(sqlCommandText, msgFlow);

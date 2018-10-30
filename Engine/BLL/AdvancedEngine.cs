@@ -64,7 +64,7 @@ namespace Engine
                 {
 
                     string Auditor = GetAuditoArr(workRules.AuditorRules);
-                    string copy = GetAuditoArr(workRules.CopyRules);
+                    string copy = GetCopyArr(workRules.CopyRules);
 
                     if (!string.IsNullOrWhiteSpace(Auditor) && !string.IsNullOrWhiteSpace(copy))
                     {
@@ -244,19 +244,19 @@ namespace Engine
 
          
             int type = premise.Value<int>("type");//审批类别 
-            int level = premise.Value<int>("level");//主管级别
+           
             string AuditoArr = null;
 
             switch (type)
             {
                 case 1://指定主管一级
                 {
-
+                    int level = premise.Value<int>("level");//主管级别
                 }
                     break;
                 case 2://多级主管
                 {
-
+                    int level = premise.Value<int>("level");//主管级别
                 }
                     break;
                 case 3://角色
@@ -290,7 +290,7 @@ namespace Engine
 
 
             int type = premise.Value<int>("type");//审批类别 
-            int level = premise.Value<int>("level");//主管级别
+           
             string copyArr = null;
 
             switch (type)
@@ -311,7 +311,7 @@ namespace Engine
                     break;
                 case 3://主管
                 {
-                   
+                    int level = premise.Value<int>("level");//主管级别
                 }
                     break;
                
