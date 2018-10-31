@@ -52,7 +52,7 @@ namespace Engine
                             break;
                         }
                     }
-                    else//默认不走条件过滤，其他
+                    else if(rules.Premise == "0")//默认不走条件过滤，其他
                     {
                         workRules = rules;
                         break;
@@ -77,8 +77,18 @@ namespace Engine
 
                         b = BasicsEngine.AddAuditRoute(auditRoute);
                     }
+                    else
+                    {
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
+                        Log.ToFile("审核消息中审核的审批人或者抄送人为空，不生成路线图。消息为："+json);
+                    }
 
 
+                }
+                else
+                {
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
+                    Log.ToFile("审核消息中未匹配到审核规则，不生成路线图。消息为：" + json);
                 }
 
 

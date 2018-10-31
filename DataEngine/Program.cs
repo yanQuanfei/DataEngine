@@ -21,9 +21,9 @@ namespace DataEngine
             PollingQueue queue = new PollingQueue();
             JobManager.Initialize(queue.Start());
 
-            //  CreateWebHostBuilder(args).Build().Run();
+          CreateWebHostBuilder(args).Build().Run();
 
-            BuildWebHost(args).Run();
+             //   BuildWebHost(args).Run();
 
         }
 

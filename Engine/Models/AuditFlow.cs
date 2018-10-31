@@ -25,6 +25,7 @@ namespace DataEngine.Models
         /// 0：未审核
         /// 1：同意
         /// 2：拒绝
+        /// 3：失效
         /// </summary>
         public int AuditState { get; set; }
         /// <summary>

@@ -24,7 +24,7 @@ namespace Engine
         /// <returns>添加的ID</returns>
         public static int AddMsgFlow(string Initiator, string UserJID, int Classify, int RecordID)
         {
-            if (string.IsNullOrEmpty(Initiator) && string.IsNullOrEmpty(Initiator))
+            if (string.IsNullOrEmpty(Initiator) && string.IsNullOrEmpty(UserJID))
             {
                 Log.ToFile("添加消息流报错：参数为空");
                 return 0;
@@ -221,7 +221,7 @@ namespace Engine
                 using (IDbConnection conn = DapperContext.MsSqlConnection())
                 {
                     string sqlCommandText =
-                    @"UPDATE AuditFlow SET AuditState=@AuditState,AuditOpinion=@AuditOpinion WHERE ID=@ID";
+                    @"UPDATE AuditFlow SET AuditState=@AuditState,AuditOpinion=@AuditOpinion WHERE ID=@ID and AuditState=0";
                     int result = conn.Execute(sqlCommandText, new { ID = ID, AuditState = (int)state, AuditOpinion = Opinion });
                     if (result > 0)
                     {
@@ -461,7 +461,12 @@ namespace Engine
                 return null;
             }
         }
-
+        /// <summary>
+        /// 获取实体表的信息
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public static object GetJobject(int ID, int type)
         {
             try
@@ -516,5 +521,49 @@ namespace Engine
                 return null;
             }
         }
+
+
+        /// <summary>
+        /// 撤回申请
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool DelMsg(int id)
+        {
+
+            try
+            {
+
+
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+
+                    string sqlCommandText = @"DELETE FROM [MsgFlow] WHERE ID=@ID and state =0";
+                    int result = conn.Execute(sqlCommandText, new {ID = id});
+                    if (result > 0)
+                    {
+                        sqlCommandText = @"DELETE FROM [AuditFlow] WHERE MsgID=@ID ";
+                         result = conn.Execute(sqlCommandText, new { ID = id });
+                        sqlCommandText = @"DELETE FROM [Route] WHERE MsgID=@ID";
+                        result = conn.Execute(sqlCommandText, new { ID = id });
+
+                        return true;
+
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.ToFile("删除消息报错ex：" + ex.Message);
+                return false;
+            }
+        }
+
+
     }
 }
