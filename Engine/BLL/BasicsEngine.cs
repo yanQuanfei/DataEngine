@@ -79,7 +79,7 @@ namespace Engine
                 {
                     msgFlow.AuditTime = DateTime.Now.ToString("yyyy-MM-dd");
                     string sqlCommandText =
-                    @"UPDATE MsgFlow SET State=@State,AuditTime=@AuditTime WHERE ID=@ID";
+                    @"UPDATE MsgFlow SET State=@State,AuditTime=@AuditTime WHERE ID=@ID and  state =0";
                     int result = conn.Execute(sqlCommandText, msgFlow);
 
                     if (result > 0)
@@ -461,6 +461,7 @@ namespace Engine
                 return null;
             }
         }
+
         /// <summary>
         /// 获取实体表的信息
         /// </summary>
@@ -522,7 +523,6 @@ namespace Engine
             }
         }
 
-
         /// <summary>
         /// 撤回申请
         /// </summary>
@@ -530,40 +530,32 @@ namespace Engine
         /// <returns></returns>
         public static bool DelMsg(int id)
         {
-
             try
             {
-
-
                 using (IDbConnection conn = DapperContext.MsSqlConnection())
                 {
-
-                    string sqlCommandText = @"DELETE FROM [MsgFlow] WHERE ID=@ID and state =0";
-                    int result = conn.Execute(sqlCommandText, new {ID = id});
+                    string sqlCommandText = @"UPDATE MsgFlow SET State=3,AuditTime=@AuditTime WHERE ID=@ID and  state =0";
+                    int result = conn.Execute(sqlCommandText, new { ID = id, AuditTime = DateTime.Now.ToString("yyyy-MM-dd") });
                     if (result > 0)
                     {
                         sqlCommandText = @"DELETE FROM [AuditFlow] WHERE MsgID=@ID ";
-                         result = conn.Execute(sqlCommandText, new { ID = id });
+                        result = conn.Execute(sqlCommandText, new { ID = id });
                         sqlCommandText = @"DELETE FROM [Route] WHERE MsgID=@ID";
                         result = conn.Execute(sqlCommandText, new { ID = id });
 
                         return true;
-
                     }
                     else
                     {
                         return false;
                     }
-                    
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.ToFile("删除消息报错ex：" + ex.Message);
                 return false;
             }
         }
-
-
     }
 }

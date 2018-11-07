@@ -3,6 +3,7 @@ using FluentScheduler;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
+using System.IO;
 using DataEngine.Models;
 using Microsoft.Extensions.Configuration;
 
@@ -21,9 +22,27 @@ namespace DataEngine
             PollingQueue queue = new PollingQueue();
             JobManager.Initialize(queue.Start());
 
-          CreateWebHostBuilder(args).Build().Run();
+            // CreateWebHostBuilder(args).Build().Run();
 
-             //   BuildWebHost(args).Run();
+            //   BuildWebHost(args).Run();
+
+
+            var config = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true)
+                .Build();
+
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseConfiguration(config)
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
+
+
 
         }
 
