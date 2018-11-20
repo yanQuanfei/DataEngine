@@ -95,30 +95,38 @@ namespace DataEngine.Controllers
             msg.Classify = m["Classify"];
             msg.LaunchTime = DateTime.Now.ToString();
             msg.State = (int)MsgState.Nil;
-
-            if (ClassifyConfig.GetClassifyStr(msg.Classify)!=null)
+            try
             {
-                msg.ID = BasicsEngine.AddMsgFlow(msg.Initiator, msg.UserJID, msg.Classify, msg.RecordID);
 
-                if (msg.ID > 0)
+
+                if (ClassifyConfig.GetClassifyStr(msg.Classify) != null)
                 {
-                    Program.FilterQueue.Enqueue(msg);
+                    msg.ID = BasicsEngine.AddMsgFlow(msg.Initiator, msg.UserJID, msg.Classify, msg.RecordID);
 
+                    if (msg.ID > 0)
+                    {
+                        Program.FilterQueue.Enqueue(msg);
+                        result.Message = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
+                    }
+                    else
+                    {
+                        result.Code = 500;
+                        result.Message = "添加失败";
+                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
+                        Log.ToFile("添加失败，消息json：" + json);
+                    }
                 }
                 else
                 {
                     result.Code = 500;
-                    result.Message = "添加失败";
-                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
-                    Log.ToFile("添加失败，消息json：" + json);
+                    result.Message = "类型不存在";
                 }
             }
-            else
+            catch(Exception ex)
             {
                 result.Code = 500;
-                result.Message = "类型不存在";
+                result.Message =ex.Message;
             }
-
             return result;
 
         }
