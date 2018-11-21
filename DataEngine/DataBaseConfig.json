@@ -1,0 +1,6 @@
+﻿{
+  "mssql": "server=192.168.2.85;database=SysOffice;User=tbobjects;password=tbobjects2013;Connect Timeout=1000000",
+  "mysql": "Server=localhost;port=3306;Database=Test;Uid=root;Pwd=Root123.;SslMode=None;",
+  "mongodb": "mongodb://yanquanfei:yan123456@ds143573.mlab.com:43573/log",
+  "OAWebSite": "http://localhost:63945/"
+}

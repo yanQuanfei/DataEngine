@@ -31,5 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.csproj" />
+    <ProjectReference Include="..\InFrom\InFrom.csproj" />
   </ItemGroup>
 </Project>

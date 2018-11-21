@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Inform;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,6 +16,9 @@ namespace DataEngine.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
+
+            Inform.Inform.AddInform("9561576014a74460b48ca76f2f720ee7@im.sino-med.net", "11123456789");
+
             return new string[] { "value1", "value2" };
         }
 

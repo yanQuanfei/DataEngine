@@ -11,11 +11,12 @@
     <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="DAL\" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Remove="Model\Model.cs" />
     <Compile Remove="Models\AppSettings\AppSettings.cs" />
     <Compile Remove="Models\AppSettings\DBSettings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj" />
+    <ProjectReference Include="..\Tool\Tool.csproj" />
   </ItemGroup>
 </Project>
