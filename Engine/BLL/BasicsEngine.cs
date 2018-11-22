@@ -65,6 +65,10 @@ namespace Engine
             }
         }
 
+
+        //考虑在修改信息地，添加消息推送
+
+
         /// <summary>
         /// 处理修改信息流
         /// 需要状态和 ID
@@ -131,6 +135,9 @@ namespace Engine
                 return false;
             }
         }
+
+
+        //考虑在添加审批时，添加消息推送
 
         /// <summary>
         /// 添加审批流
@@ -522,6 +529,44 @@ namespace Engine
                 return null;
             }
         }
+
+        /// <summary>
+        /// 获取某人的上级领导
+        /// </summary>
+        /// <param name="name">userjid</param>
+        /// <param name="level">向上几级</param>
+        /// <param name="type">1.直接向上，2.间隔向上</param>
+        /// <returns>领导的UserJID的数组</returns>
+        public static string GetUserForLevel(string name,int level,int type)
+        {
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                    List<string> users = new List<string>();
+
+                    string sqlCommandText =
+                        @"　SELECT e1.* FROM employeesTree e1,employeesTree e2 WHERE e2.ename='小天' AND e2.path like concat(e1.path,'/%')";
+
+
+                    foreach (string role in roles)
+                    {
+                        List<string> users1 = new List<string>();
+                        users1 = conn.Query<string>(sqlCommandText, new { RoleCode = role }).ToList();
+
+                        users = users.Union(users1).ToList<string>();
+                    }
+
+                    return Newtonsoft.Json.JsonConvert.SerializeObject(users);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("根据角色获取员工报错ex：" + ex.Message);
+                return null;
+            }
+        }
+
 
         /// <summary>
         /// 撤回申请

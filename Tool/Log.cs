@@ -10,7 +10,8 @@ namespace Engine.Tool
         static Log()
         {
             //System.IO.File.ReadAllLines(AppDomain.CurrentDomain.BaseDirectory + "\\tmp.txt");
-            m_sLogFileName = AppDomain.CurrentDomain.BaseDirectory + "DataEngine.log";
+            m_sLogFileName = AppDomain.CurrentDomain.BaseDirectory + DateTime.Now.Date.ToString("yyyyMMdd") + "DataEngine.log";
+            
         }
 
         private static String m_sLogFileName = "";
