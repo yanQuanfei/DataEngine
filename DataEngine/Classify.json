@@ -1,8 +1,13 @@
 ﻿{
   "0": "Med_Leava",
-  "1": "Med_Overtime"
+  "1": "Med_Overtime",
+  "2": "FeeApply",
+  "3": "PriceApply",
+  "4": "EngineerDaliy",
+  "5": "MarketWeeklyPlan",
+  "6": "BiddingApply",
+  "7": "Travel",
+  "8": "SupplementClock"
+
 }
-
-
-
 
