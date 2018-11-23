@@ -2,7 +2,7 @@
 using System;
 using System.IO;
 
-namespace Engine.Tool
+namespace Tool
 {
     public class ClassifyConfig
     {

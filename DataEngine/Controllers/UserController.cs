@@ -1,17 +1,12 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Engine;
-using Inform;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DataEngine.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    [SwaggerTag("用户")]
+    public class UserController : Controller
     {
         // GET: api/<controller>
         [HttpGet]

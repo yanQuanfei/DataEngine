@@ -1,9 +1,9 @@
 ﻿{
-  "mssql": "server=192.168.2.85;database=SysOffice;User=tbobjects;password=tbobjects2013;Connect Timeout=1000000",
+  "mssql1": "server=192.168.2.85;database=SysOffice;User=tbobjects;password=tbobjects2013;Connect Timeout=1000000",
   "mysql": "Server=localhost;port=3306;Database=Test;Uid=root;Pwd=Root123.;SslMode=None;",
   "mongodb": "mongodb://yanquanfei:yan123456@ds143573.mlab.com:43573/log",
   "OAWebSite": "http://localhost:63945/",
   "mssql2":"server=127.0.0.1;database=master;User=sa;password=<YourStrong!Passw0rd>;Connect Timeout=1000000",
   
-  "mssql1":"Server=tcp:yanquanfei.database.windows.net,1433;Initial Catalog=SysOffice;Persist Security Info=False;User ID=yanquanfei;Password=QQ1042620949.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  "mssql":"Server=yanquanfei.database.windows.net,1433;Initial Catalog=SysOffice;Persist Security Info=False;User ID=yanquanfei;Password=QQ1042620949.;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 }

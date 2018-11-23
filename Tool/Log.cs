@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace Engine.Tool
+namespace Tool
 {
     public class Log
     {
