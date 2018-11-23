@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Engine;
 using Inform;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,12 @@ namespace DataEngine.Controllers
         public IEnumerable<string> Get()
         {
 
-            Inform.Inform.AddInform("9561576014a74460b48ca76f2f720ee7@im.sino-med.net", "11123456789");
+           // Inform.Inform.AddInform("9561576014a74460b48ca76f2f720ee7@im.sino-med.net", "11123456789");
 
-            return new string[] { "value1", "value2" };
+           string json= BasicsEngine.GetUserForLevel("小天", 2, 1);
+            
+            
+            return new string[] { json };
         }
 
         // GET api/<controller>/5

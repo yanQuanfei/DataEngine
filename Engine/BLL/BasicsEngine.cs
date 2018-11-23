@@ -537,7 +537,7 @@ namespace Engine
         /// <param name="level">向上几级</param>
         /// <param name="type">1.直接向上，2.间隔向上</param>
         /// <returns>领导的UserJID的数组</returns>
-        public static string GetUserForLevel(string name,int level,int type)
+        public static string GetUserForLevel(string UserJID,int level,int type)
         {
             try
             {
@@ -546,16 +546,16 @@ namespace Engine
                     List<string> users = new List<string>();
 
                     string sqlCommandText =
-                        @"　SELECT e1.* FROM employeesTree e1,employeesTree e2 WHERE e2.ename='小天' AND e2.path like concat(e1.path,'/%')";
+                        @"　SELECT e1.* FROM employeesTree e1,employeesTree e2 WHERE e2.UserJID=@UserJID AND e2.path like concat(e1.path,'/%')";
 
 
-                    foreach (string role in roles)
-                    {
+//                    foreach (string role in roles)
+//                    {
                         List<string> users1 = new List<string>();
-                        users1 = conn.Query<string>(sqlCommandText, new { RoleCode = role }).ToList();
-
-                        users = users.Union(users1).ToList<string>();
-                    }
+                        users1 = conn.Query<string>(sqlCommandText, new { UserJID = UserJID }).ToList();
+//
+//                        users = users.Union(users1).ToList<string>();
+//                    }
 
                     return Newtonsoft.Json.JsonConvert.SerializeObject(users);
                 }
