@@ -65,9 +65,7 @@ namespace Engine
             }
         }
 
-
         //考虑在修改信息地，添加消息推送
-
 
         /// <summary>
         /// 处理修改信息流
@@ -135,7 +133,6 @@ namespace Engine
                 return false;
             }
         }
-
 
         //考虑在添加审批时，添加消息推送
 
@@ -502,7 +499,7 @@ namespace Engine
         /// </summary>
         /// <param name="roles"></param>
         /// <returns></returns>
-        public static string GetUserForRole(JArray roles)
+        public static List<string>  GetUserForRole(JArray roles)
         {
             try
             {
@@ -520,7 +517,7 @@ namespace Engine
                         users = users.Union(users1).ToList<string>();
                     }
 
-                    return Newtonsoft.Json.JsonConvert.SerializeObject(users);
+                    return users;
                 }
             }
             catch (Exception ex)
@@ -537,7 +534,7 @@ namespace Engine
         /// <param name="level">向上几级</param>
         /// <param name="type">1.直接向上，2.间隔向上</param>
         /// <returns>领导的UserJID的数组</returns>
-        public static string GetUserForLevel(string UserJID,int level,int type)
+        public static List<string> GetUserForLevel(string UserJID, int level, int type)
         {
             try
             {
@@ -546,27 +543,40 @@ namespace Engine
                     List<string> users = new List<string>();
 
                     string sqlCommandText =
-                        @"　SELECT e1.* FROM employeesTree e1,employeesTree e2 WHERE e2.UserJID=@UserJID AND e2.path like concat(e1.path,'/%')";
+                        @"　SELECT e1.UserJID FROM employeesTree e1,employeesTree e2 WHERE e2.UserJID=@UserJID AND e2.path like concat(e1.path,'/%') order by e1.eid desc";
 
+                    List<string> users1 = new List<string>();
+                    users1 = conn.Query<string>(sqlCommandText, new { UserJID = UserJID }).ToList();
 
-//                    foreach (string role in roles)
-//                    {
-                        List<string> users1 = new List<string>();
-                        users1 = conn.Query<string>(sqlCommandText, new { UserJID = UserJID }).ToList();
-//
-//                        users = users.Union(users1).ToList<string>();
-//                    }
+                    if (users1.Count > 0)
+                    {
+                        if (type == 1)
+                        {
+                            for (int i = 0; i < level && i < users1.Count; i++)
+                            {
+                                List<string> users2 = new List<string>();
+                                users2.Add(users1[i]);
+                                users = users.Union(users2).ToList<string>();
+                            }
+                        }
+                        else if (type == 2)
+                        {
+                            if (level < users1.Count)
+                            {
+                                users.Add(users1[level]);
+                            }
+                        }
+                    }
 
-                    return Newtonsoft.Json.JsonConvert.SerializeObject(users);
+                    return users;
                 }
             }
             catch (Exception ex)
             {
-                Log.ToFile("根据角色获取员工报错ex：" + ex.Message);
+                Log.ToFile("根据组织架构获取员工报错ex：" + ex.Message);
                 return null;
             }
         }
-
 
         /// <summary>
         /// 撤回申请

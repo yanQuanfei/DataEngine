@@ -20,10 +20,12 @@ namespace DataEngine.Controllers
 
            // Inform.Inform.AddInform("9561576014a74460b48ca76f2f720ee7@im.sino-med.net", "11123456789");
 
-           string json= BasicsEngine.GetUserForLevel("小天", 2, 1);
+
+
+
+        
             
-            
-            return new string[] { json };
+            return new string[] { "124567890" };
         }
 
         // GET api/<controller>/5

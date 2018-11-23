@@ -25,7 +25,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
 
-      "applicationUrl": "*:5000"
+      "applicationUrl": "*:5003"
     },
     "Docker": {
       "commandName": "Docker",

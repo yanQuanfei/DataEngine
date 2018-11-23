@@ -52,19 +52,17 @@ namespace Engine
                             break;
                         }
                     }
-                    else if(rules.Premise == "0")//默认不走条件过滤，其他
+                    else if (rules.Premise == "0")//默认不走条件过滤，其他
                     {
                         workRules = rules;
                         break;
                     }
                 }
 
-
                 if (workRules != null)
                 {
-
-                    string Auditor = GetAuditoArr(workRules.AuditorRules);
-                    string copy = GetCopyArr(workRules.CopyRules);
+                    string Auditor = GetAuditoArr(workRules.AuditorRules, msg.UserJID);
+                    string copy = GetCopyArr(workRules.CopyRules, msg.UserJID);
 
                     if (!string.IsNullOrWhiteSpace(Auditor) && !string.IsNullOrWhiteSpace(copy))
                     {
@@ -80,19 +78,14 @@ namespace Engine
                     else
                     {
                         string json = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
-                        Log.ToFile("审核消息中审核的审批人或者抄送人为空，不生成路线图。消息为："+json);
+                        Log.ToFile("审核消息中审核的审批人或者抄送人为空，不生成路线图。消息为：" + json);
                     }
-
-
                 }
                 else
                 {
                     string json = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
                     Log.ToFile("审核消息中未匹配到审核规则，不生成路线图。消息为：" + json);
                 }
-
-
-               
 
                 return b;
             }
@@ -248,45 +241,67 @@ namespace Engine
         /// </summary>
         /// <param name="auditorRules">审批规则</param>
         /// <returns>"[\"1111@com\",\"2222@com\",\"3333@com\"]"</returns>
-        public static string GetAuditoArr(string auditorRules)
+        public static string GetAuditoArr(string auditorRules, string UserJID)
         {
-            JObject premise = JsonConvert.DeserializeObject<JObject>(auditorRules);
+            JArray arrRules = JsonConvert.DeserializeObject<JArray>(auditorRules);
 
-         
-            int type = premise.Value<int>("type");//审批类别 
-           
-            string AuditoArr = null;
+            List<string> AuditoArrMax = new List<string>();
 
-            switch (type)
+            try
             {
-                case 1://指定主管一级
+                foreach (JObject premise in arrRules)
                 {
-                    int level = premise.Value<int>("level");//主管级别
-                }
-                    break;
-                case 2://多级主管
-                {
-                    int level = premise.Value<int>("level");//主管级别
-                }
-                    break;
-                case 3://角色
-                {
-                   JArray name = premise.Value<JArray>("name");//角色或者指定人的数组
+                    //  JObject premise = JsonConvert.DeserializeObject<JObject>(auditorRules);
 
-                    AuditoArr = BasicsEngine.GetUserForRole(name);
-                }
-                    break;
-                case 4://指定成员
-                {
-                    JArray name = premise.Value<JArray>("name");//角色或者指定人的数组
+                    int type = premise.Value<int>("type"); //审批类别
 
-                    AuditoArr = JsonConvert.SerializeObject(name);
+                    List<string> AuditoArrMin = new List<string>();
+
+                    switch (type)
+                    {
+                        case 1: //指定主管一级
+                            {
+                                int level = premise.Value<int>("level"); //主管级别
+
+                                AuditoArrMin = BasicsEngine.GetUserForLevel(UserJID, level, 2);
+                            }
+                            break;
+
+                        case 2: //多级主管
+                            {
+                                int level = premise.Value<int>("level"); //主管级别
+
+                                AuditoArrMin = BasicsEngine.GetUserForLevel(UserJID, level, 1);
+                            }
+                            break;
+
+                        case 3: //角色
+                            {
+                                JArray name = premise.Value<JArray>("name"); //角色或者指定人的数组
+
+                                AuditoArrMin = BasicsEngine.GetUserForRole(name);
+                            }
+                            break;
+
+                        case 4: //指定成员
+                            {
+                                JArray name = premise.Value<JArray>("name"); //角色或者指定人的数组
+
+                                AuditoArrMin = name.ToObject<List<string>>();
+                            }
+                            break;
+                    }
+
+                    AuditoArrMax = AuditoArrMax.Union(AuditoArrMin).ToList<string>();
                 }
-                    break;
+
+                return Newtonsoft.Json.JsonConvert.SerializeObject(AuditoArrMax);
             }
-            
-
-            return AuditoArr;
+            catch (Exception ex)
+            {
+                Log.ToFile("获取审批人数组报错：" + ex.Message);
+                return null;
+            }
         }
 
         /// <summary>
@@ -294,41 +309,43 @@ namespace Engine
         /// </summary>
         /// <param name="copyRules">抄送规则</param>
         /// <returns>"[\"1111@com\",\"2222@com\",\"3333@com\"]"</returns>
-        public static string GetCopyArr(string copyRules)
+        public static string GetCopyArr(string copyRules,string UserJID)
         {
             JObject premise = JsonConvert.DeserializeObject<JObject>(copyRules);
 
+            int type = premise.Value<int>("type");//审批类别
 
-            int type = premise.Value<int>("type");//审批类别 
-           
-            string copyArr = null;
+          List<string> copyArr = null;
 
             switch (type)
             {
                 case 1://指定成员
-                {
-                    JArray name = premise.Value<JArray>("name");//角色或者指定人的数组
+                    {
+                        JArray name = premise.Value<JArray>("name");//角色或者指定人的数组
 
-                    copyArr = JsonConvert.SerializeObject(name);
+                        copyArr = name.ToObject<List<string>>();
                     }
                     break;
+
                 case 2://角色
-                {
-                    JArray name = premise.Value<JArray>("name");//角色或者指定人的数组
+                    {
+                        JArray name = premise.Value<JArray>("name");//角色或者指定人的数组
 
-                    copyArr = BasicsEngine.GetUserForRole(name);
+                        copyArr = BasicsEngine.GetUserForRole(name);
                     }
                     break;
+
                 case 3://主管
-                {
-                    int level = premise.Value<int>("level");//主管级别
-                }
+                    {
+                        int level = premise.Value<int>("level");//主管级别
+
+                        copyArr= BasicsEngine.GetUserForLevel(UserJID, level, 2);
+
+                    }
                     break;
-               
             }
 
-
-            return copyArr;
+             return Newtonsoft.Json.JsonConvert.SerializeObject(copyArr);
         }
 
         /// <summary>
