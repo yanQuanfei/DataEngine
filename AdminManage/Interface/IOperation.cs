@@ -9,34 +9,35 @@ namespace Admin.Interface
         /// 获取数据
         /// </summary>
         /// <returns></returns>
-        List<Data> GetData();
+        List<object> GetData();
+      
 
         /// <summary>
         /// 获取一条数据的详细信息
         /// </summary>
         /// <param name="id">消息 ID</param>
         /// <returns></returns>
-        Data GetData(int id);
+        object GetData(int id);
 
         /// <summary>
         /// 添加数据
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        Data AddData(Data data);
+        object AddData(object data);
 
         /// <summary>
         /// 修改数据
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        bool UpdData(Data data);
+        bool UpdData(object data);
 
         /// <summary>
         /// 删除数据
         /// </summary>
-        /// <param name="data"></param>
+       
         /// <returns></returns>
-        bool DelData(Data data);
+        bool DelData(int ID);
     }
 }

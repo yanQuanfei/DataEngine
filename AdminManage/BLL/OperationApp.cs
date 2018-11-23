@@ -11,9 +11,9 @@ namespace Admin.BLL
 {
     public class OperationApp:IOperation
     {
-        public List<User> GetData()
+        public List<object> GetData()
         {
-            //分页
+           
             using (IDbConnection conn = DapperContext.MsSqlConnection())
             
             {
@@ -22,31 +22,33 @@ namespace Admin.BLL
                 //string sqlCommandText = string.Format(@"SELECT * FROM USERS  LIMIT {0},{1} ", pageIndex * pageSize, pageSize);
                 string sqlCommandText = string.Format(@"SELECT * FROM employeesTree ");
                 List<User> users = conn.Query<User>(sqlCommandText).ToList();
-                return users;
+                return (List<object>())users;
             }
 
            
         }
 
-        public Data GetData(int id)
+        object IOperation.GetData(int id)
+        {
+            return GetData(id);
+        }
+
+        public object AddData(object data)
         {
             throw new System.NotImplementedException();
         }
 
-        public Data AddData(Data data)
+        public bool UpdData(object data)
+        {
+            
+        }
+
+        public bool DelData(int ID)
         {
             throw new System.NotImplementedException();
         }
 
-        public bool UpdData(Data data)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public bool DelData(Data data)
-        {
-            throw new System.NotImplementedException();
-        }
+      
     }
 
    
