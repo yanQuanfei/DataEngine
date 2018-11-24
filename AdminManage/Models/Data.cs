@@ -1,4 +1,4 @@
-namespace Admin.Models
+﻿namespace Admin.Models
 {
     public abstract class Data
     {

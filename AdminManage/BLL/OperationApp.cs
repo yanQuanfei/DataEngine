@@ -1,55 +1,134 @@
+﻿using Admin.Interface;
+using Admin.Models;
+using DAL;
+using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Admin.Interface;
-using Admin.Models;
-using Dapper;
-using DAL;
-
+using Tool;
 
 namespace Admin.BLL
 {
-    public class OperationApp:IOperation
+    public class OperationApp : IOperation<App>
     {
-        public List<object> GetData()
+        public List<App> GetData()
         {
-           
-            using (IDbConnection conn = DapperContext.MsSqlConnection())
-            
+            try
             {
-//                int pageIndex = 0;
-//                int pageSize = 2;
-                //string sqlCommandText = string.Format(@"SELECT * FROM USERS  LIMIT {0},{1} ", pageIndex * pageSize, pageSize);
-                string sqlCommandText = string.Format(@"SELECT * FROM employeesTree ");
-                List<User> users = conn.Query<User>(sqlCommandText).ToList();
-                return (List<object>())users;
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                    string sqlCommandText = string.Format(@"SELECT * FROM AppResources");
+                    List<App> apps = conn.Query<App>(sqlCommandText).ToList();
+                    return apps;
+                }
             }
-
-           
+            catch (Exception ex)
+            {
+                Log.ToFile("获取App列表报错：" + ex.Message);
+                return null;
+            }
         }
 
-        object IOperation.GetData(int id)
+        public App GetData(int id)
         {
-            return GetData(id);
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                    string sqlCommandText = string.Format(@"SELECT * FROM AppResources  WHERE ID=@ID");
+                    App app = conn.Query<App>(sqlCommandText, new {ID = id}).FirstOrDefault();
+                    return app;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("获取App详情报错：" + ex.Message);
+                return null;
+            }
+          
         }
 
-        public object AddData(object data)
+        public App AddData(App data)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                   
+                    string sqlCommandText =
+                        @"INSERT INTO AppResources(WebUrl,ResourceName,ImageUrl,)VALUES(@WebUrl,@ResourceName,@ImageUrl)";
+                    sqlCommandText += "SELECT CAST(SCOPE_IDENTITY() as int)";
+                    int result = conn.Query<int>(sqlCommandText, data).FirstOrDefault();
+
+                    if (result > 0)
+                    {
+                        data.ID = result;
+                        return data;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("添加App报错：" + ex.Message);
+                return null;
+            }
         }
 
-        public bool UpdData(object data)
+        public bool UpdData(List<App> data)
         {
-            
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                    string sqlCommandText =
+                        @"UPDATE AppResources SET WebUrl=@WebUrl,ResourceName=@ResourceName,ImageUrl=@ImageUrl WHERE ID=@ID";
+                    int result = conn.Execute(sqlCommandText,data);
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("修改App报错：" + ex.Message);
+                return false;
+            }
         }
 
         public bool DelData(int ID)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                using (IDbConnection conn = DapperContext.MsSqlConnection())
+                {
+                    string sqlCommandText =
+                        @"DELETE FROM [AppResources] WHERE ID=@ID";
+                    int result = conn.Execute(sqlCommandText, new { ID = ID });
+                    if (result > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.ToFile("删除App报错：" + ex.Message);
+                return false;
+            }
         }
-
-      
     }
-
-   
 }

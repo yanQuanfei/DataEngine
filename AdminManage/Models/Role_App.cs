@@ -1,8 +1,12 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Admin.Models
 {
-    public class RoleApp:Mapping
+
+
+
+
+    public class RoleApp
     {
         /// <summary>
         /// 角色
@@ -14,7 +18,7 @@ namespace Admin.Models
         public List<App> apps{ get; set; }
     }
 
-    public class AppRole:Mapping
+    public class AppRole
     {
         /// <summary>
         /// 资源

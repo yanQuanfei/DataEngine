@@ -1,37 +1,37 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Admin.Models;
 
 namespace Admin.Interface
 {
-    public interface IOperation
+    public interface IOperation<T>
     {
         /// <summary>
         /// 获取数据
         /// </summary>
         /// <returns></returns>
-        List<object> GetData();
-      
+        List<T> GetData();
+
 
         /// <summary>
         /// 获取一条数据的详细信息
         /// </summary>
         /// <param name="id">消息 ID</param>
         /// <returns></returns>
-        object GetData(int id);
+        T GetData(int id);
 
         /// <summary>
         /// 添加数据
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        object AddData(object data);
+        T AddData(T data);
 
         /// <summary>
         /// 修改数据
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="datas"></param>
         /// <returns></returns>
-        bool UpdData(object data);
+        bool UpdData(List<T> datas);
 
         /// <summary>
         /// 删除数据
