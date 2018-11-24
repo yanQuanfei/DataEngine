@@ -39,11 +39,6 @@ namespace DataEngine
             });
 
 
-            //services.AddOptions();
-            //services.Configure<SqlContext>(Configuration.GetSection("SqlContext"));//数据库连接信息
-            //services.Configure<DBSettings>(Configuration.GetSection("MongoContext"));//其他配置信息
-
-            // services.AddTransient<IRepository<LogEventData>, LogRepository>();//数据访问
             #endregion
         }
 
