@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Admin.Models;
 
-namespace Admin.Interface
+namespace AdminManage.Interface
 {
     public interface IOperation<T>
     {
@@ -36,7 +35,6 @@ namespace Admin.Interface
         /// <summary>
         /// 删除数据
         /// </summary>
-       
         /// <returns></returns>
         bool DelData(int ID);
     }

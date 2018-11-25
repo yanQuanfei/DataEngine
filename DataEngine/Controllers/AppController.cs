@@ -1,5 +1,9 @@
 using System.Collections.Generic;
+using Admin.Models;
+using AdminManage.BLL;
+using AdminManage.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace DataEngine.Controllers
@@ -13,6 +17,11 @@ namespace DataEngine.Controllers
         public IEnumerable<string> Get()
         {
 
+            IOperation<App> operation =new OperationApp();
+
+            operation.GetData();
+            
+            
             return new string[] { "124567890" };
         }
 
