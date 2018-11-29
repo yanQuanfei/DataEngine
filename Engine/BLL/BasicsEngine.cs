@@ -1,12 +1,12 @@
-﻿using Dapper;
+﻿using DAL;
+using Dapper;
 using DataEngine.Models;
-using Tool;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DAL;
+using Tool;
 
 namespace Engine
 {
@@ -162,12 +162,22 @@ namespace Engine
                     audit.AuditState = (int)AuditState.Nil;
 
                     string sqlCommandText =
-                        @"INSERT INTO AuditFlow(AuditorJID,MsgID,AuditState)VALUES(@AuditorJID,@MsgID,@AuditState)";
-                    int result = conn.Execute(sqlCommandText, audit);
-
-                    if (result > 0)
+                        @"SELECT a.State as MState FROM MsgFlow as a  WHERE a.id=@ID";
+                    int MState = conn.Query<int>(sqlCommandText, new { ID = MsgID }).FirstOrDefault();
+                    if (MState == 0)
                     {
-                        return true;
+                        sqlCommandText =
+                            @"INSERT INTO AuditFlow(AuditorJID,MsgID,AuditState)VALUES(@AuditorJID,@MsgID,@AuditState)";
+                        int result = conn.Execute(sqlCommandText, audit);
+
+                        if (result > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
@@ -194,12 +204,22 @@ namespace Engine
                 using (IDbConnection conn = DapperContext.MsSqlConnection())
                 {
                     string sqlCommandText =
-                        @"INSERT INTO AuditFlow(AuditorJID,MsgID,AuditState)VALUES(@AuditorJID,@MsgID,@AuditState)";
-                    int result = conn.Execute(sqlCommandText, audits);
-
-                    if (result > 0)
+                        @"SELECT a.State as MState FROM MsgFlow as a  WHERE a.id=@ID";
+                    int MState = conn.Query<int>(sqlCommandText, new { ID = audits[0].MsgID }).FirstOrDefault();
+                    if (MState == 0)
                     {
-                        return true;
+                        sqlCommandText =
+                            @"INSERT INTO AuditFlow(AuditorJID,MsgID,AuditState)VALUES(@AuditorJID,@MsgID,@AuditState)";
+                        int result = conn.Execute(sqlCommandText, audits);
+
+                        if (result > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                     else
                     {
@@ -482,7 +502,8 @@ namespace Engine
                 using (IDbConnection conn = DapperContext.MsSqlConnection())
                 {
                     string sqlCommandText =
-                        @"SELECT  *  FROM  " + TableName + " WHERE ID=@ID";
+                    //                        @"SELECT  *  FROM  " + TableName + " WHERE ID=@ID";
+                    @"SELECT a.ID as MID,a.State as MState,b.*  FROM MsgFlow as a LEFT JOIN  " + TableName + " as b on a.RecordID=b.ID WHERE a.id=@ID";
                     object ob = conn.Query(sqlCommandText, new { ID = ID }).FirstOrDefault();
 
                     return ob;
@@ -500,7 +521,7 @@ namespace Engine
         /// </summary>
         /// <param name="roles"></param>
         /// <returns></returns>
-        public static List<string>  GetUserForRole(JArray roles)
+        public static List<string> GetUserForRole(JArray roles)
         {
             try
             {

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DataEngine.Models;
+﻿using DataEngine.Models;
 using Engine;
-using Tool;
 using FluentScheduler;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System;
+using Tool;
 
 namespace DataEngine.Queue
 {
@@ -35,7 +31,6 @@ namespace DataEngine.Queue
             return registry;
         }
 
-
         /// <summary>
         /// 过滤队列出列
         /// </summary>
@@ -43,22 +38,19 @@ namespace DataEngine.Queue
         {
             public void Execute()
             {
-               
                 try
                 {
                     ////取出最先加进去的元素，并删除，充分体现队列的先进先出的特性
                     ///如队列中无元素，则会引发异常
                     if (Program.FilterQueue != null && Program.FilterQueue.Count > 0)
                     {
-
                         MsgFlow msg = Program.FilterQueue.Dequeue();
 
-                        string msgJson = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
+                        string msgJson = JsonConvert.SerializeObject(msg);
 
-                      bool b=  AdvancedEngine.FilterMsgToAuditRoute(msg);
+                        bool b = AdvancedEngine.FilterMsgToAuditRoute(msg);
                         if (b)
                         {
-
                             AuditFlow auditFlow = new AuditFlow();
                             auditFlow.MsgID = msg.ID;
                             //主要是来源不一样
@@ -72,7 +64,6 @@ namespace DataEngine.Queue
                             Log.ToFile("过滤队列消息：" + msgJson);
                             Log.ToFile("过滤队列循环,创建路线图失败,未加入处理队列");
                         }
-
                     }
                 }
                 catch (Exception ex)
@@ -81,6 +72,7 @@ namespace DataEngine.Queue
                 }
             }
         }
+
         /// <summary>
         /// 处理队列出列
         /// </summary>
@@ -88,22 +80,18 @@ namespace DataEngine.Queue
         {
             public void Execute()
             {
-
                 try
                 {
                     ////取出最先加进去的元素，并删除，充分体现队列的先进先出的特性
                     ///如队列中无元素，则会引发异常
                     if (Program.ProcessQueue != null && Program.ProcessQueue.Count > 0)
                     {
-                       
                         AuditFlow auditFlow = Program.ProcessQueue.Dequeue();
 
                         AdvancedEngine.ProcessMsgToAuditAndCopy(auditFlow);
-                       
-                        string msgJson = Newtonsoft.Json.JsonConvert.SerializeObject(auditFlow);
+
+                        string msgJson = JsonConvert.SerializeObject(auditFlow);
                         Log.ToFile("处理队列：" + msgJson);
-                    
-                     
                     }
                 }
                 catch (Exception ex)
@@ -112,7 +100,5 @@ namespace DataEngine.Queue
                 }
             }
         }
-
-
     }
 }

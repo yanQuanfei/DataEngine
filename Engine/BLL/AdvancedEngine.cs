@@ -1,10 +1,10 @@
 ﻿using DataEngine.Models;
-using Tool;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tool;
 
 namespace Engine
 {
@@ -25,37 +25,42 @@ namespace Engine
                 //获取类别的所有审批规则
                 List<WorkRules> rulesList = BasicsEngine.GetWorkRules(msg.Classify);
                 //获取该条消息
-                object ob = BasicsEngine.GetJobject(msg.RecordID, msg.Classify);
+                object ob = BasicsEngine.GetJobject(msg.ID, msg.Classify);
                 string a = JsonConvert.SerializeObject(ob);
                 JObject job = JsonConvert.DeserializeObject<JObject>(a);
-                WorkRules workRules = new WorkRules();
+
+                WorkRules workRules = null;
                 bool b = false;
-                //匹配优先级
-                foreach (WorkRules rules in rulesList)
+
+                if (job.Value<int>("MState") == 0)
                 {
-                    //走过滤
-                    if (rules.Premise != "0")
+                    //匹配优先级
+                    foreach (WorkRules rules in rulesList)
                     {
-                        JObject premise = JsonConvert.DeserializeObject<JObject>(rules.Premise);
+                        //走过滤
+                        if (rules.Premise != "0")
+                        {
+                            JObject premise = JsonConvert.DeserializeObject<JObject>(rules.Premise);
 
-                        string name = premise.Value<string>("name");
-                        string type = premise.Value<string>("type");
-                        string where = premise.Value<string>("where");
-                        string value = premise.Value<string>("value");
+                            string name = premise.Value<string>("name");
+                            string type = premise.Value<string>("type");
+                            string where = premise.Value<string>("where");
+                            string value = premise.Value<string>("value");
 
-                        //判断是否满足条件
-                        bool YoN = Compare(type, where, job.Value<string>(name), value);
+                            //判断是否满足条件
+                            bool YoN = Compare(type, where, job.Value<string>(name), value);
 
-                        if (YoN)
+                            if (YoN)
+                            {
+                                workRules = rules;
+                                break;
+                            }
+                        }
+                        else if (rules.Premise == "0")//默认不走条件过滤，其他
                         {
                             workRules = rules;
                             break;
                         }
-                    }
-                    else if (rules.Premise == "0")//默认不走条件过滤，其他
-                    {
-                        workRules = rules;
-                        break;
                     }
                 }
 
@@ -77,13 +82,13 @@ namespace Engine
                     }
                     else
                     {
-                        string json = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
+                        string json = JsonConvert.SerializeObject(msg);
                         Log.ToFile("审核消息中审核的审批人或者抄送人为空，不生成路线图。消息为：" + json);
                     }
                 }
                 else
                 {
-                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(msg);
+                    string json = JsonConvert.SerializeObject(msg);
                     Log.ToFile("审核消息中未匹配到审核规则，不生成路线图。消息为：" + json);
                 }
 
@@ -309,13 +314,13 @@ namespace Engine
         /// </summary>
         /// <param name="copyRules">抄送规则</param>
         /// <returns>"[\"1111@com\",\"2222@com\",\"3333@com\"]"</returns>
-        public static string GetCopyArr(string copyRules,string UserJID)
+        public static string GetCopyArr(string copyRules, string UserJID)
         {
             JObject premise = JsonConvert.DeserializeObject<JObject>(copyRules);
 
             int type = premise.Value<int>("type");//审批类别
 
-          List<string> copyArr = null;
+            List<string> copyArr = null;
 
             switch (type)
             {
@@ -339,13 +344,12 @@ namespace Engine
                     {
                         int level = premise.Value<int>("level");//主管级别
 
-                        copyArr= BasicsEngine.GetUserForLevel(UserJID, level, 2);
-
+                        copyArr = BasicsEngine.GetUserForLevel(UserJID, level, 2);
                     }
                     break;
             }
 
-             return Newtonsoft.Json.JsonConvert.SerializeObject(copyArr);
+            return Newtonsoft.Json.JsonConvert.SerializeObject(copyArr);
         }
 
         /// <summary>
