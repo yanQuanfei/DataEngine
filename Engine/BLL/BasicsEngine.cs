@@ -40,7 +40,7 @@ namespace Engine
                     msg.UserJID = UserJID;
                     msg.RecordID = RecordID;
                     msg.Classify = Classify;
-                    msg.LaunchTime = DateTime.Now.ToString();
+                    msg.LaunchTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
                     msg.State = (int)MsgState.Nil;
 
                     string sqlCommandText =
@@ -80,7 +80,7 @@ namespace Engine
             {
                 using (IDbConnection conn = DapperContext.MsSqlConnection())
                 {
-                    msgFlow.AuditTime = DateTime.Now.ToString("yyyy-MM-dd");
+                    msgFlow.AuditTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
                     string sqlCommandText =
                     @"UPDATE MsgFlow SET State=@State,AuditTime=@AuditTime WHERE ID=@ID and  state =0";
                     int result = conn.Execute(sqlCommandText, msgFlow);
@@ -530,7 +530,7 @@ namespace Engine
                     List<string> users = new List<string>();
 
                     string sqlCommandText =
-                        @"SELECT  UserCode  FROM User_Role_Mapping  WHERE RoleCode = @RoleCode";
+                        @"SELECT  UserJID  FROM UserResourcesMapping  WHERE RoleID = @RoleCode";
                     foreach (string role in roles)
                     {
                         List<string> users1 = new List<string>();
@@ -565,7 +565,7 @@ namespace Engine
                     List<string> users = new List<string>();
 
                     string sqlCommandText =
-                        @"　SELECT e1.UserJID FROM employeesTree e1,employeesTree e2 WHERE e2.UserJID=@UserJID AND e2.path like concat(e1.path,'/%') order by e1.eid desc";
+                        @"　SELECT e1.UserJID FROM employeesTree e1,employeesTree e2 WHERE e2.UserJID=@UserJID AND e2.path like concat(e1.path,'/%') order by e1.[level] desc";
 
                     List<string> users1 = new List<string>();
                     users1 = conn.Query<string>(sqlCommandText, new { UserJID = UserJID }).ToList();
@@ -583,9 +583,13 @@ namespace Engine
                         }
                         else if (type == 2)
                         {
-                            if (level < users1.Count)
+                            if (level <= users1.Count)
                             {
-                                users.Add(users1[level]);
+                                users.Add(users1[level-1]);
+                            }
+                            else
+                            {
+                                users.Add(users1[users1.Count - 1]);
                             }
                         }
                     }
@@ -612,7 +616,7 @@ namespace Engine
                 using (IDbConnection conn = DapperContext.MsSqlConnection())
                 {
                     string sqlCommandText = @"UPDATE MsgFlow SET State=3,AuditTime=@AuditTime WHERE ID=@ID and  state =0";
-                    int result = conn.Execute(sqlCommandText, new { ID = id, AuditTime = DateTime.Now.ToString("yyyy-MM-dd") });
+                    int result = conn.Execute(sqlCommandText, new { ID = id, AuditTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss") });
                     if (result > 0)
                     {
                         sqlCommandText = @"DELETE FROM [AuditFlow] WHERE MsgID=@ID ";

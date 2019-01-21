@@ -87,7 +87,7 @@ namespace DataEngine.Controllers
             msg.UserJID = m["UserJID"];
             msg.RecordID = m["RecordID"];
             msg.Classify = m["Classify"];
-            msg.LaunchTime = DateTime.Now.ToString();
+            msg.LaunchTime = DateTime.Now.ToString("yyyy/MM/dd hh:mm:ss");
             msg.State = (int)MsgState.Nil;
             try
             {

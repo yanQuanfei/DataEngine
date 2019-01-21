@@ -31,7 +31,7 @@ namespace DAL
         public static MySqlConnection MySqlConnection()
         {
             //连接字符串
-             string mysqlconnectionString = msSql; 
+             string mysqlconnectionString = mySql; 
             var mysql = new MySqlConnection(mysqlconnectionString);
             mysql.Open();
             return mysql;
@@ -39,7 +39,7 @@ namespace DAL
         }
         public static SqlConnection MsSqlConnection()
         {
-           //  string mssqlconnectionString = "server=127.0.0.1;database=master;User=sa;password=<YourStrong!Passw0rd>;Connect Timeout=1000000";
+          
            string mssqlconnectionString = msSql;
            
 
@@ -48,6 +48,6 @@ namespace DAL
             return connection;
         }
 
-
+         
     }
 }
