@@ -564,16 +564,16 @@ namespace Engine
                 {
                     List<string> users = new List<string>();
 
-                    string sqlCommandText =
-                        @"　SELECT e1.UserJID FROM employeesTree e1,employeesTree e2 WHERE e2.UserJID=@UserJID AND e2.path like concat(e1.path,'/%') order by e1.[level] desc";
-
-                    List<string> users1 = new List<string>();
-                    users1 = conn.Query<string>(sqlCommandText, new { UserJID = UserJID }).ToList();
-
-                    if (users1.Count > 0)
+                    if (type == 1)
                     {
-                        if (type == 1)
+                        string sqlCommandText =
+                            @"　SELECT e1.UserJID FROM employeesTree e1,employeesTree e2 WHERE e2.UserJID=@UserJID AND e2.path like concat(e1.path,'/%') and e1.[level]>=@level order by e1.[level] desc";
+
+                        List<string> users1 = new List<string>();
+                        users1 = conn.Query<string>(sqlCommandText, new { UserJID = UserJID, level = level }).ToList();
+                        if (users1.Count > 0)
                         {
+                            //之所以这么写，是为了去除重复的人
                             for (int i = 0; i < level && i < users1.Count; i++)
                             {
                                 List<string> users2 = new List<string>();
@@ -581,16 +581,17 @@ namespace Engine
                                 users = users.Union(users2).ToList<string>();
                             }
                         }
-                        else if (type == 2)
+                    }
+                    else if (type == 2)
+                    {
+                        string sqlCommandText =
+                            @"　SELECT e1.UserJID FROM employeesTree e1,employeesTree e2 WHERE e2.UserJID=@UserJID AND e2.path like concat(e1.path,'/%') and e1.[level] = @level order by e1.[level] desc";
+
+                        List<string> users1 = new List<string>();
+                        users1 = conn.Query<string>(sqlCommandText, new { UserJID = UserJID, level = level }).ToList();
+                        if (users1.Count > 0)
                         {
-                            if (level <= users1.Count)
-                            {
-                                users.Add(users1[level-1]);
-                            }
-                            else
-                            {
-                                users.Add(users1[users1.Count - 1]);
-                            }
+                            users.Add(users1[0]);
                         }
                     }
 
